@@ -1,0 +1,20 @@
+0 silly argv {
+0 silly argv   _: [ 'run' ],
+0 silly argv   stream: true,
+0 silly argv   lernaVersion: '7.4.2',
+0 silly argv   '$0': 'node_modules/.bin/lerna',
+0 silly argv   script: 'dev:viewer'
+0 silly argv }
+1 notice cli v7.4.2
+2 verbose packageConfigs Explicit "packages" configuration found in lerna.json. Resolving packages using the configured glob(s): ["extensions/*","platform/*","modes/*","addOns/externals/*"]
+3 verbose rootPath /home/rr/Publish/frontend/RViewer
+4 error Error: Target project does not exist: npm:@ramyro/addons@file:Ramyro/AddOns
+4 error     at validateCommonDependencyRules (/home/rr/Publish/frontend/RViewer/node_modules/nx/src/project-graph/project-graph-builder.js:323:15)
+4 error     at validateDependency (/home/rr/Publish/frontend/RViewer/node_modules/nx/src/project-graph/project-graph-builder.js:313:5)
+4 error     at /home/rr/Publish/frontend/RViewer/node_modules/nx/src/plugins/js/lock-file/yarn-parser.js:214:80
+4 error     at Array.forEach (<anonymous>)
+4 error     at /home/rr/Publish/frontend/RViewer/node_modules/nx/src/plugins/js/lock-file/yarn-parser.js:205:49
+4 error     at Array.forEach (<anonymous>)
+4 error     at /home/rr/Publish/frontend/RViewer/node_modules/nx/src/plugins/js/lock-file/yarn-parser.js:203:72
+4 error     at Array.forEach (<anonymous>)
+4 error     at /home/rr/Publish/frontend/RViewer/node_modules/nx/src/plugins/js/lock-file/yarn-parser.js:200:26

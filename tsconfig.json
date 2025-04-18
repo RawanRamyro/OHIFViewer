@@ -25,7 +25,9 @@
       "@ohif/extension-cornerstone-dicom-seg": ["./extensions/cornerstone-dicom-seg/src"],
       "@ohif/extension-cornerstone": ["./extensions/cornerstone/src"],
       "@ohif/extension-dicom-pdf": ["./extensions/dicom-pdf/src"],
-      "@state": ["./platform/app/src/state"]
+      "@state": ["./platform/app/src/state"],
+      "@ramyro/addons": ["./ramyro/addons/src"],
+      "@ramyro/addons/*": ["./ramyro/addons/src/*"]
     }
   },
   "include": [
@@ -33,7 +35,8 @@
     "platform/**/public/**/*",
     "extensions/**/src/**/*",
     "modes/**/src/**/*",
-    "tests/**/*"
-  ],
+    "tests/**/*",
+    "ramyro/**/src/**/*"
+, "ramyro/addons/tailwind.config.ts"  ],
   "exclude": ["node_modules", "dist"]
 }

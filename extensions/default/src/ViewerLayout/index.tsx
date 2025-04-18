@@ -7,6 +7,7 @@ import { useAppConfig } from '@state';
 import ViewerHeader from './ViewerHeader';
 import SidePanelWithServices from '../Components/SidePanelWithServices';
 import { Onboarding } from '@ohif/ui-next';
+import { ClinicalNoteDialog } from '@ramyro/addons';
 
 function ViewerLayout({
   // From Extension Module Params
@@ -151,7 +152,8 @@ function ViewerLayout({
         </React.Fragment>
       </div>
       <Onboarding />
-      <InvestigationalUseDialog dialogConfiguration={appConfig?.investigationalUseDialog} />
+      <ClinicalNoteDialog servicesManager={servicesManager} />
+      {/* <InvestigationalUseDialog dialogConfiguration={appConfig?.investigationalUseDialog} /> */}
     </div>
   );
 }

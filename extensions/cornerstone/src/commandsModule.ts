@@ -29,6 +29,8 @@ import { getFirstAnnotationSelected } from './utils/measurementServiceMappings/u
 import getActiveViewportEnabledElement from './utils/getActiveViewportEnabledElement';
 import toggleVOISliceSync from './utils/toggleVOISliceSync';
 import { usePositionPresentationStore, useSegmentationPresentationStore } from './stores';
+import { setKeyImageAPI } from '@ramyro/addons/services/KeyImageService';
+import KeyImageForm from './utils/KeyImageForm';
 
 const toggleSyncFunctions = {
   imageSlice: toggleImageSliceSync,
@@ -442,6 +444,10 @@ function commandsModule({
     showDownloadViewportModal: () => {
       const { activeViewportId } = viewportGridService.getState();
 
+      const { displaySetService } =
+    servicesManager.services;
+
+      const dataSets = displaySetService.getActiveDisplaySets();
       if (!cornerstoneViewportService.getCornerstoneViewport(activeViewportId)) {
         // Cannot download a non-cornerstone viewport (image).
         uiNotificationService.show({
@@ -486,7 +492,7 @@ function commandsModule({
       } else if (viewport.getRotation !== undefined) {
         const presentation = viewport.getViewPresentation();
         const { rotation: currentRotation } = presentation;
-        const newRotation = (currentRotation + rotation + 360) % 360;
+        const newRotation = (currentRotation + rotation) % 360;
         viewport.setViewPresentation({ rotation: newRotation });
         viewport.render();
       }
@@ -1215,6 +1221,50 @@ function commandsModule({
         viewportGridService.getActiveViewportId()
       );
     },
+
+    showKeyImageForm: () => {
+      const { activeViewportId } = viewportGridService.getState();
+      const enabledElement = _getActiveViewportEnabledElement();
+      
+      if (!enabledElement) {
+        return;
+      }
+
+      const { viewport } = enabledElement;
+      const currentImageId = viewport.getCurrentImageId();
+      const regex = /instances\/([^\/]+)/;
+      const match = currentImageId.match(regex);
+      
+      if (!match) {
+        uiNotificationService.show({
+          title: 'Key Image',
+          message: 'Could not extract image ID',
+          type: 'error',
+        });
+        return;
+      }
+
+      const { uiModalService } = servicesManager.services;
+
+      if (uiModalService) {
+        uiModalService.show({
+          content: KeyImageForm,
+          title: 'Add Key Image',
+          contentProps: {
+            onClose: uiModalService.hide,
+            onSubmit: (description: string) => {
+              setKeyImageAPI(match[1], description);
+              uiNotificationService.show({
+                title: 'Key Image',
+                message: 'Key image added successfully',
+                type: 'success',
+              });
+            },
+          },
+          containerDimensions: 'w-[500px]',
+        });
+      }
+    },
   };
 
   const definitions = {
@@ -1453,6 +1503,9 @@ function commandsModule({
     },
     getRenderInactiveSegmentations: {
       commandFn: actions.getRenderInactiveSegmentations,
+    },
+    showKeyImageForm: {
+      commandFn: actions.showKeyImageForm,
     },
   };
 

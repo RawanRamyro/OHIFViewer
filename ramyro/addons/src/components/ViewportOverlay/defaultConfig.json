@@ -1,0 +1,205 @@
+{
+  "topLeftItems": [
+    {
+      "id": "PatientName",
+      "customizationType": "ohif.overlayItem",
+      "label": "",
+      "title": "Patient Name",
+      "attribute": "PatientName",
+      "condition": "hasPatientName",
+      "formatters": ["formatPN"]
+    },
+    {
+      "id": "PatientID",
+      "customizationType": "ohif.overlayItem",
+      "label": "",
+      "title": "Patient ID",
+      "attribute": "PatientID",
+      "condition": "hasPatientID"
+    },
+    {
+      "id": "PatientSex",
+      "customizationType": "ohif.overlayItem",
+      "label": "",
+      "title": "Patient Sex",
+      "attribute": "PatientSex",
+      "condition": "hasPatientSex"
+    },
+    {
+      "id": "PatientBirthDate",
+      "label": "",
+      "title": "Patient Age",
+      "attribute": "PatientBirthDate",
+      "condition": "hasPatientBirthDate",
+      "customizationType": "ohif.overlayItem.age"
+    }
+  ],
+  "topRightItems": [
+    {
+      "id": "ContentDate",
+      "customizationType": "ohif.overlayItem",
+      "label": "Acq.:",
+      "title": "Content Date",
+      "attribute": "ContentDate",
+      "formatters": ["formatDate"]
+    },
+    {
+      "id": "ContentTime",
+      "customizationType": "ohif.overlayItem",
+      "label": "Acq.:",
+      "title": "Content Time",
+      "attribute": "ContentTime",
+      "formatters": ["formatTime"]
+    },
+    {
+      "id": "KVP",
+      "customizationType": "ohif.overlayItem",
+      "label": "KVP:",
+      "title": "KVP",
+      "attribute": "KVP"
+    },
+    {
+      "id": "XRayTubeCurrent",
+      "customizationType": "ohif.overlayItem",
+      "label": "mA:",
+      "title": "X-Ray Tube Current",
+      "attribute": "XRayTubeCurrent"
+    },
+    {
+      "id": "ExposureTime",
+      "customizationType": "ohif.overlayItem",
+      "label": "ms:",
+      "title": "Exposure Time",
+      "attribute": "ExposureTime"
+    },
+    {
+      "id": "Exposure",
+      "customizationType": "ohif.overlayItem",
+      "label": "mAs:",
+      "title": "Exposure",
+      "attribute": "Exposure"
+    },
+    {
+      "id": "SAR",
+      "customizationType": "ohif.overlayItem",
+      "label": "SAR:",
+      "title": "SAR",
+      "attribute": "SAR"
+    },
+    {
+      "id": "RepetitionTime",
+      "customizationType": "ohif.overlayItem",
+      "label": "TR:",
+      "title": "Repetition Time",
+      "attribute": "RepetitionTime"
+    },
+    {
+      "id": "EchoTime",
+      "customizationType": "ohif.overlayItem",
+      "label": "TE:",
+      "title": "Echo Time",
+      "attribute": "EchoTime"
+    }
+  ],
+  "bottomLeftItems": [
+    {
+      "id": "SeriesNumber",
+      "label": "Se:",
+      "title": "Series Number",
+      "attribute": "SeriesNumber",
+      "customizationType": "ohif.overlayItem"
+    },
+    {
+      "id": "InstanceNumber",
+      "customizationType": "ohif.overlayItem.instanceNumber"
+    },
+    {
+      "id": "WindowLevel",
+      "customizationType": "ohif.overlayItem.windowLevel"
+    },
+    {
+      "id": "ZoomLevel",
+      "customizationType": "ohif.overlayItem.zoomLevel",
+      "condition": "isZoomTool"
+    },
+    {
+      "id": "SeriesDescription",
+      "customizationType": "ohif.overlayItem",
+      "label": "",
+      "title": "Series description",
+      "attribute": "SeriesDescription"
+    }
+  ],
+  "bottomRightItems": [
+    {
+      "id": "PatientPosition",
+      "customizationType": "ohif.overlayItem",
+      "label": "",
+      "title": "Patient Position",
+      "attribute": "PatientPosition"
+    },
+    {
+      "id": "CassetteOrientation",
+      "customizationType": "ohif.overlayItem",
+      "label": "",
+      "title": "Cassette Orientation",
+      "attribute": "CassetteOrientation"
+    },
+    {
+      "id": "CassetteSize",
+      "customizationType": "ohif.overlayItem",
+      "label": "",
+      "title": "Cassette Size",
+      "attribute": "CassetteSize"
+    },
+    {
+      "id": "BodyPartExamined",
+      "customizationType": "ohif.overlayItem",
+      "label": "",
+      "title": "Body Part Examined",
+      "attribute": "BodyPartExamined"
+    },
+    {
+      "id": "SliceThickness",
+      "customizationType": "ohif.overlayItem",
+      "label": "Thickness:",
+      "title": "Slice Thickness",
+      "attribute": "SliceThickness"
+    },
+    {
+      "id": "SliceLocation",
+      "customizationType": "ohif.overlayItem",
+      "label": "Location:",
+      "title": "Slice Location",
+      "attribute": "SliceLocation"
+    },
+    {
+      "id": "ConvolutionKernel",
+      "customizationType": "ohif.overlayItem",
+      "label": "",
+      "title": "Convolution Kernel",
+      "attribute": "ConvolutionKernel"
+    },
+    {
+      "id": "FilterType",
+      "customizationType": "ohif.overlayItem",
+      "label": "",
+      "title": "Filter Type",
+      "attribute": "FilterType"
+    },
+    {
+      "id": "Manufacturer",
+      "customizationType": "ohif.overlayItem",
+      "label": "",
+      "title": "Manufacturer",
+      "attribute": "Manufacturer"
+    },
+    {
+      "id": "InstitutionName",
+      "customizationType": "ohif.overlayItem",
+      "label": "",
+      "title": "Institution Name",
+      "attribute": "InstitutionName"
+    }
+  ]
+}

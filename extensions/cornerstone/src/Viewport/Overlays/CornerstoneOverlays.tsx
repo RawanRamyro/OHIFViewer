@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
 import ViewportImageScrollbar from './ViewportImageScrollbar';
-import CustomizableViewportOverlay from './CustomizableViewportOverlay';
+import { CustomizableViewportOverlay } from '@ramyro/addons';
 import ViewportOrientationMarkers from './ViewportOrientationMarkers';
 import ViewportImageSliceLoadingIndicator from './ViewportImageSliceLoadingIndicator';
 

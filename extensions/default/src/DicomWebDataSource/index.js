@@ -17,6 +17,8 @@ import StaticWadoClient from './utils/StaticWadoClient';
 import getDirectURL from '../utils/getDirectURL';
 import { fixBulkDataURI } from './utils/fixBulkDataURI';
 
+import { ThumbnailService } from '@ramyro/addons';
+
 const { DicomMetaDictionary, DicomDict } = dcmjs.data;
 
 const { naturalizeDataset, denaturalizeDataset } = DicomMetaDictionary;
@@ -155,6 +157,21 @@ function createDicomWebApi(dicomWebConfig, servicesManager) {
           return processSeriesResults(results);
         },
         // processResults: processResults.bind(),
+        thumbnail: async (StudyInstanceUID, SeriesInstanceUID) => {
+          const result = await ThumbnailService.getThumbnail({
+            StudyInstanceUID,
+            SeriesInstanceUID,
+            dicomWebConfig,
+            getAuthorizationHeader: getAuthrorizationHeader,
+          });
+
+          if (result.success) {
+            return result.data;
+          } else {
+            console.log('Could not load thumbnail:', result.error);
+            return null;
+          }
+        },
       },
       instances: {
         search: (studyInstanceUid, queryParameters) => {
@@ -555,7 +572,7 @@ function createDicomWebApi(dicomWebConfig, servicesManager) {
   };
 
   if (dicomWebConfig.supportsReject) {
-    implementation.reject = dcm4cheeReject(dicomWebConfig.wadoRoot);
+    implementation.reject = dcm4cheeReject(dicomWebConfig.wadoRoot, servicesManager);
   }
 
   return IWebApiDataSource.create(implementation);

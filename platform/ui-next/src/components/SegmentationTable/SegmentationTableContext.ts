@@ -1,4 +1,6 @@
+import SegmentationService from 'extensions/cornerstone/src/services/SegmentationService';
 import { createContext } from '../../lib/createContext';
+import { CommandsManager } from '@ohif/core';
 
 interface Segmentation {
   segmentationId: string;
@@ -56,6 +58,7 @@ interface SegmentationTableContext {
   onSegmentClick: (segmentationId: string, segmentIndex: number) => void;
   onSegmentEdit: (segmentationId: string, segmentIndex: number) => void;
   onSegmentationEdit: (segmentationId: string) => void;
+  onSegmentationSave: (segmentationId: string) => void; // @ramyro - added
   onSegmentColorClick: (segmentationId: string, segmentIndex: number) => void;
   onSegmentDelete: (segmentationId: string, segmentIndex: number) => void;
   onToggleSegmentVisibility: (segmentationId: string, segmentIndex: number) => void;

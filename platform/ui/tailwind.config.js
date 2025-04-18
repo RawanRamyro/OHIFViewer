@@ -29,10 +29,10 @@ module.exports = {
       },
 
       primary: {
-        light: '#5acce6',
+        light: '#EEEEEE',
         main: '#0944b3',
-        dark: '#090c29',
-        active: '#348cfd',
+        dark: '#0E0E0E',
+        active: '#EEEEEE',
       },
       inputfield: {
         main: '#3a3f99',
@@ -44,8 +44,8 @@ module.exports = {
       secondary: {
         light: '#3a3f99',
         main: '#2b166b',
-        dark: '#041c4a',
-        active: '#1f1f27',
+        dark: '#222831',
+        active: '#00ADB5',
       },
 
       indigo: {
@@ -61,7 +61,7 @@ module.exports = {
       },
       bkg: {
         low: '#050615',
-        med: '#090C29',
+        med: '#393E46',
         full: '#041C4A',
       },
       info: {
@@ -69,7 +69,7 @@ module.exports = {
         secondary: '#7BB2CE',
       },
       actions: {
-        primary: '#348CFD',
+        primary: '#FFFFFF',
         highlight: '#5ACCE6',
         hover: 'rgba(52, 140, 253, 0.2)',
       },

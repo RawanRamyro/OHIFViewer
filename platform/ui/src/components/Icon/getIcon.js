@@ -176,6 +176,9 @@ import { ReactComponent as investigationalUse } from './../../assets/icons/illus
 import { ReactComponent as actionNewDialog } from './../../assets/icons/action-new-dialog.svg';
 import { ReactComponent as iconToolCobbAngle } from './../../assets/icons/tool-cobb-angle.svg';
 import { ReactComponent as iconToolWindowRegion } from './../../assets/icons/tool-window-region.svg';
+import { ReactComponent as logoKeyImage } from '@ramyro/addons/assets/svgs/tool-key-image.svg';
+import { ReactComponent as toolSave } from '@ramyro/addons/assets/svgs/tool-save.svg';
+import { ReactComponent as toolSphere } from '@ramyro/addons/assets/svgs/tool-sphere.svg';
 
 import CTAAA from './../../assets/icons/CT-AAA.png';
 import CTAAA2 from './../../assets/icons/CT-AAA2.png';
@@ -287,6 +290,9 @@ const ICONS = {
   'notifications-warning': notificationsWarning,
 
   /** Tools */
+  'tool-key-image': logoKeyImage,
+  'tool-save': toolSave,
+  'tool-sphere':toolSphere,
   'toggle-dicom-overlay': toggleDicomOverlay,
   'tool-zoom': toolZoom,
   'tool-capture': toolCapture,

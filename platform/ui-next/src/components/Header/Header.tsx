@@ -12,6 +12,8 @@ import {
 
 import NavBar from '../NavBar';
 
+import { RamyroLogo } from '@ramyro/addons/constants/RamyroLogo';
+
 // Todo: we should move this component to composition and remove props base
 
 interface HeaderProps {
@@ -67,7 +69,7 @@ function Header({
           >
             {isReturnEnabled && <Icons.ChevronPatient className="text-primary-active w-8" />}
             <div className="ml-1">
-              {WhiteLabeling?.createLogoComponentFn?.(React, props) || <Icons.OHIFLogo />}
+              {WhiteLabeling?.createLogoComponentFn?.(React, props) || <RamyroLogo />}
             </div>
           </div>
         </div>

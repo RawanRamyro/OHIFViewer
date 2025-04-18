@@ -36,6 +36,7 @@ import createRoutes from './routes';
 import appInit from './appInit.js';
 import OpenIdConnectRoutes from './utils/OpenIdConnectRoutes';
 import { ShepherdJourneyProvider } from 'react-shepherd';
+import { SaveOnCloseComponent } from '@ramyro/addons';
 
 let commandsManager: CommandsManager,
   extensionManager: ExtensionManager,
@@ -168,6 +169,7 @@ function App({
         {authRoutes}
         {appRoutes}
       </BrowserRouter>
+      <SaveOnCloseComponent servicesManager={servicesManager} />
     </CombinedProviders>
   );
 }

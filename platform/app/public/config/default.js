@@ -24,7 +24,7 @@ window.config = {
     prefetch: 25,
   },
   // filterQueryParam: false,
-  defaultDataSourceName: 'dicomweb',
+  defaultDataSourceName: process.env.DATA_SOURCE || 'local5000',
   /* Dynamic config allows user to pass "configUrl" query string this allows to load config without recompiling application. The regex will ensure valid configuration source */
   // dangerouslyUseDynamicConfig: {
   //   enabled: true,
@@ -124,12 +124,13 @@ window.config = {
 
     {
       namespace: '@ohif/extension-default.dataSourcesModule.dicomweb',
-      sourceName: 'local5000',
+      sourceName: process.env.DATA_SOURCE,
       configuration: {
         friendlyName: 'Static WADO Local Data',
         name: 'DCM4CHEE',
-        qidoRoot: 'http://localhost:5000/dicomweb',
-        wadoRoot: 'http://localhost:5000/dicomweb',
+        wadoUriRoot: process.env.DICOM_WEB_API_URL,
+        qidoRoot: process.env.DICOM_WEB_API_URL,
+        wadoRoot: process.env.DICOM_WEB_API_URL,
         qidoSupportsIncludeField: false,
         supportsReject: true,
         supportsStow: true,
@@ -143,6 +144,10 @@ window.config = {
         bulkDataURI: {
           enabled: true,
           relativeResolution: 'studies',
+        },
+        requestOptions: {
+          requestFromBrowser: true,
+          credentials: 'include',
         },
       },
     },

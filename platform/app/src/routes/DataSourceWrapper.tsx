@@ -7,6 +7,7 @@ import { extensionManager } from '../App.tsx';
 import { useParams, useLocation } from 'react-router';
 import { useNavigate } from 'react-router-dom';
 import useSearchParams from '../hooks/useSearchParams.ts';
+import { RDataSource } from '@ramyro/addons';
 
 /**
  * Determines if two React Router location objects are the same.
@@ -55,7 +56,8 @@ function DataSourceWrapper(props: withAppTypes) {
     let dataSourceName = lowerCaseSearchParams.get('datasources');
 
     if (!dataSourceName && window.config.defaultDataSourceName) {
-      return '';
+      // Ismail: I added this line here to configure it for our dicomweb api
+      return RDataSource;
     }
 
     if (!dataSourceName) {

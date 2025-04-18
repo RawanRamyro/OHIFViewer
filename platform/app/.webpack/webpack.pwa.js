@@ -78,12 +78,18 @@ module.exports = (env, argv) => {
         // Hoisted Yarn Workspace Modules
         path.resolve(__dirname, '../../../node_modules'),
         SRC_DIR,
+        path.resolve(__dirname, 'D:/Ramyro Frontend/RViewer/extensions/monai-label/node_modules'),
+        path.resolve(__dirname, 'D:/Ramyro Frontend/RViewer/modes/monai-label/node_modules'),
       ],
     },
     plugins: [
       // For debugging re-renders
       // MillionLint.webpack(),
-      new Dotenv(),
+      new Dotenv({
+        systemvars: true, // Load all system variables as well
+        expand: true, // Allows your variables to expand other variables
+        defaults: true, // Load '.env.defaults' as the default values if empty
+      }),
       // Clean output.path
       new CleanWebpackPlugin(),
       // Copy "Public" Folder to Dist
@@ -110,6 +116,16 @@ module.exports = (env, argv) => {
           {
             from: `${PUBLIC_DIR}/${APP_CONFIG}`,
             to: `${DIST_DIR}/app-config.js`,
+            transform(content) {
+              const config = content.toString();
+
+              // Replace environment variables in the config
+              const transformedConfig = config.replace(/process\.env\.(\w+)/g, (match, p1) => {
+                return JSON.stringify(process.env[p1] || '');
+              });
+
+              return Buffer.from(transformedConfig);
+            },
           },
           // Copy Dicom Microscopy Viewer build files
           {
@@ -133,6 +149,8 @@ module.exports = (env, argv) => {
       new InjectManifest({
         swDest: 'sw.js',
         swSrc: path.join(SRC_DIR, 'service-worker.js'),
+        // Increase the limit to 4mb:
+        maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
         // Need to exclude the theme as it is updated independently
         exclude: [/theme/],
         // Cache large files for the manifests to avoid warning messages
@@ -171,6 +189,10 @@ module.exports = (env, argv) => {
       historyApiFallback: {
         disableDotRule: true,
         index: PUBLIC_URL + 'index.html',
+      },
+      headers: {
+        'Cross-Origin-Embedder-Policy': 'require-corp',
+        'Cross-Origin-Opener-Policy': 'same-origin',
       },
       devMiddleware: {
         writeToDisk: true,

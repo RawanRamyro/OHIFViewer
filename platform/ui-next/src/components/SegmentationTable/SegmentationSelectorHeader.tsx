@@ -37,6 +37,7 @@ export const SegmentationSelectorHeader: React.FC<{ children?: React.ReactNode }
     onSegmentationDelete,
     onSegmentationDownload,
     onSegmentationDownloadRTSS,
+    onSegmentationSave,
     storeSegmentation,
     exportOptions,
   } = useSegmentationTableContext('SegmentationTable.HeaderCollapsed');
@@ -103,6 +104,9 @@ export const SegmentationSelectorHeader: React.FC<{ children?: React.ReactNode }
               <DropdownMenuSubContent>
                 <DropdownMenuItem onClick={() => storeSegmentation(activeSegmentation.id)}>
                   {t('Export DICOM SEG')}
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => onSegmentationSave(activeSegmentation.id)}>
+                  {t('Save DICOM SEG')}
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => onSegmentationDownload(activeSegmentation.id)}>
                   {t('Download DICOM SEG')}

@@ -1,0 +1,50 @@
+/* src/styles/theme.css */
+:root {
+  --primary-color: #0062cc;
+  --secondary-color: #6c757d;
+  --background-color: #ffffff;
+  --surface-color: #f8f9fa;
+  --text-color: #000000;
+  --text-secondary-color: #666666;
+  --border-color: #dee2e6;
+}
+
+[data-mode="dark"] {
+  --primary-color: #3d8bff;
+  --secondary-color: #868e96;
+  --background-color: #151515;
+  --surface-color: #202020;
+  --text-color: #ffffff;
+  --text-secondary-color: #d3d3d3;
+  --border-color: #444444;
+
+  /* OHIF specific dark mode overrides */
+  --ui-gray-darkest: #151515;
+  --ui-gray-darker: #202020;
+  --ui-gray-dark: #303030;
+  --ui-gray: #404040;
+  --ui-gray-light: #5c5c5c;
+  --ui-gray-lighter: #808080;
+  --ui-gray-lightest: #a0a0a0;
+  
+  --active-color: var(--primary-color);
+  --ui-border-color: var(--border-color);
+  --ui-border-color-dark: var(--border-color);
+  --ui-border-color-active: var(--primary-color);
+}
+
+/* Add OHIF specific light mode variables */
+[data-mode="light"] {
+  --ui-gray-darkest: #000000;
+  --ui-gray-darker: #222222;
+  --ui-gray-dark: #444444;
+  --ui-gray: #666666;
+  --ui-gray-light: #999999;
+  --ui-gray-lighter: #cccccc;
+  --ui-gray-lightest: #f0f0f0;
+  
+  --active-color: var(--primary-color);
+  --ui-border-color: #dee2e6;
+  --ui-border-color-dark: #333333;
+  --ui-border-color-active: var(--primary-color);
+}

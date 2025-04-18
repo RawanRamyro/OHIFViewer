@@ -2,19 +2,32 @@ import React from 'react';
 import { SegmentationTable } from '@ohif/ui-next';
 import { useActiveViewportSegmentationRepresentations } from '../hooks/useActiveViewportSegmentationRepresentations';
 import { metaData } from '@cornerstonejs/core';
+import { saveSegmentation } from '@ramyro/addons';
+import { AIFeedbackPanel } from '@ramyro/addons/components/AIFeedBackPanel';
 
 export default function PanelSegmentation({
   servicesManager,
   commandsManager,
+  extensionManager,
   children,
 }: withAppTypes) {
-  const { customizationService, viewportGridService, displaySetService } = servicesManager.services;
+  const { customizationService, viewportGridService, displaySetService, segmentationService } =
+    servicesManager.services;
 
   const { segmentationsWithRepresentations, disabled } =
     useActiveViewportSegmentationRepresentations({
       servicesManager,
     });
 
+  // Get active segmentation info
+  const activeSegmentationInfo = segmentationsWithRepresentations.find(
+    info => info.representation?.active
+  );
+  
+  const activeSegmentationId = activeSegmentationInfo?.segmentation?.segmentationId;
+
+  const activeSegmentationInstanceUIS = displaySetService.getActiveDisplaySets()[0].SeriesInstanceUID;
+  
   const handlers = {
     onSegmentationAdd: async () => {
       const viewportId = viewportGridService.getState().activeViewportId;
@@ -85,6 +98,33 @@ export default function PanelSegmentation({
       commandsManager.run('removeSegmentationFromViewport', { segmentationId });
     },
 
+    onSegmentationSave: async segmentationId => {
+    const { Labelmap } = activeSegmentationInfo.segmentation.representationData;
+    const referencedImageIds = Labelmap.referencedImageIds;
+    const firstImageId = referencedImageIds[0];
+
+    const segmentation = segmentationService.getSegmentation(segmentationId);
+      
+    if (!segmentation) {
+      console.error('Could not find segmentation with ID:', segmentationId);
+      return;
+    }
+
+    const segDataSet = displaySetService.getActiveDisplaySets();
+    const segSeriesInstanceUID = segDataSet[0].SeriesInstanceUID;
+
+    console.log("segDataSet series instance UID: ", segDataSet[0].SeriesInstanceUID);
+
+      await saveSegmentation({
+        commandsManager,
+        servicesManager,
+        extensionManager,
+        segmentationService,
+        segmentationId,
+        segSeriesInstanceUID,
+      });
+    },
+
     onSegmentationDelete: segmentationId => {
       commandsManager.run('deleteSegmentation', { segmentationId });
     },
@@ -147,6 +187,14 @@ export default function PanelSegmentation({
     }
   );
 
+  const { showAIFeedback } = customizationService.getCustomization(
+    'PanelSegmentation.showAIFeedback',
+    {
+      id: 'default.showAIFeedback',
+      showAIFeedback: true, // Enable by default
+    }
+  );
+
   const exportOptions = segmentationsWithRepresentations.map(({ segmentation }) => {
     const { representationData, segmentationId } = segmentation;
     const { Labelmap } = representationData;
@@ -186,6 +234,14 @@ export default function PanelSegmentation({
 
   return (
     <>
+      {/* Render AI Feedback panel always at the component level, outside of SegmentationTable */}
+      {showAIFeedback && activeSegmentationId && ( 
+        <AIFeedbackPanel
+          segmentationId={activeSegmentationInstanceUIS}
+          disabled={disabled}
+          servicesManager={servicesManager}
+        />
+      )}
       <SegmentationTable
         disabled={disabled}
         data={segmentationsWithRepresentations}
@@ -195,6 +251,7 @@ export default function PanelSegmentation({
         disableEditing={disableEditing}
         onSegmentationAdd={onSegmentationAdd}
         onSegmentationClick={handlers.onSegmentationClick}
+        onSegmentationSave={handlers.onSegmentationSave}
         onSegmentationDelete={handlers.onSegmentationDelete}
         showAddSegment={showAddSegment}
         onSegmentAdd={handlers.onSegmentAdd}

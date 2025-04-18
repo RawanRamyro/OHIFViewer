@@ -33,7 +33,9 @@ const VERSION_NUMBER = fs.readFileSync(path.join(__dirname, '../version.txt'), '
 const COMMIT_HASH = fs.readFileSync(path.join(__dirname, '../commit.txt'), 'utf8') || '';
 
 //
-dotenv.config();
+dotenv.config({
+  path: path.resolve(__dirname, '../.env'),
+});
 
 const defineValues = {
   /* Application */
@@ -49,6 +51,15 @@ const defineValues = {
   'process.env.LOCIZE_PROJECTID': JSON.stringify(process.env.LOCIZE_PROJECTID || ''),
   'process.env.LOCIZE_API_KEY': JSON.stringify(process.env.LOCIZE_API_KEY || ''),
   'process.env.REACT_APP_I18N_DEBUG': JSON.stringify(process.env.REACT_APP_I18N_DEBUG || ''),
+  /* API */
+  'process.env.WORKLIST_URL': JSON.stringify(process.env.WORKLIST_URL || ''),
+
+  'process.env.WORKLIST_API_URL': JSON.stringify(process.env.WORKLIST_API_URL || ''),
+  'process.env.VIEWER_API_URL': JSON.stringify(process.env.VIEWER_API_URL || ''),
+  'process.env.DICOM_WEB_API_URL': JSON.stringify(process.env.DICOM_WEB_API_URL || ''),
+
+  'process.env.DATA_SOURCE': JSON.stringify(process.env.DATA_SOURCE || ''),
+  'process.env.USE_EXTERNAL_WORKLIST': JSON.stringify(process.env.USE_EXTERNAL_WORKLIST || ''),
 };
 
 // Only redefine updated values.  This avoids warning messages in the logs
@@ -57,6 +68,10 @@ if (!process.env.APP_CONFIG) {
 }
 
 module.exports = (env, argv, { SRC_DIR, ENTRY }) => {
+  if (!process.env.NODE_ENV) {
+    throw new Error('process.env.NODE_ENV not set');
+  }
+
   const mode = NODE_ENV === 'production' ? 'production' : 'development';
   const isProdBuild = NODE_ENV === 'production';
   const isQuickBuild = QUICK_BUILD === 'true';
@@ -179,6 +194,7 @@ module.exports = (env, argv, { SRC_DIR, ENTRY }) => {
         '@hooks': path.resolve(__dirname, '../platform/app/src/hooks'),
         '@routes': path.resolve(__dirname, '../platform/app/src/routes'),
         '@state': path.resolve(__dirname, '../platform/app/src/state'),
+        '@ramyro/addons': path.resolve(__dirname, '../ramyro/addons/src'),
         'dicom-microscopy-viewer':
           'dicom-microscopy-viewer/dist/dynamic-import/dicomMicroscopyViewer.min.js',
       },
@@ -190,10 +206,13 @@ module.exports = (env, argv, { SRC_DIR, ENTRY }) => {
         path.resolve(__dirname, '../../../node_modules'),
         path.resolve(__dirname, '../platform/app/node_modules'),
         path.resolve(__dirname, '../platform/ui/node_modules'),
+        path.resolve(__dirname, '../ramyro'),
+        path.resolve(__dirname, '../node_modules'),
+        'node_modules',
         SRC_DIR,
       ],
       // Attempt to resolve these extensions in order.
-      extensions: ['.js', '.jsx', '.json', '.ts', '.tsx', '*'],
+      extensions: ['.js', '.jsx', '.json', '.ts', '.tsx'],
       // symlinked resources are resolved to their real path, not their symlinked location
       symlinks: true,
       fallback: {
@@ -207,6 +226,9 @@ module.exports = (env, argv, { SRC_DIR, ENTRY }) => {
       new webpack.DefinePlugin(defineValues),
       new webpack.ProvidePlugin({
         Buffer: ['buffer', 'Buffer'],
+      }),
+      new webpack.LoaderOptionsPlugin({
+        debug: true,
       }),
       ...(isProdBuild ? [] : [new ReactRefreshWebpackPlugin({ overlay: false })]),
       // Uncomment to generate bundle analyzer

@@ -11,8 +11,10 @@ import { Separator } from '@ohif/ui-next';
 import { PanelStudyBrowserHeader } from '@ohif/extension-default';
 import { useAppConfig } from '@state';
 import { defaultActionIcons, defaultViewPresets } from './constants';
+import { useThumbnailLoader } from '@ramyro/addons';
 
 const { formatDate, createStudyBrowserTabs } = utils;
+
 const thumbnailNoImageModalities = [
   'SR',
   'SEG',
@@ -24,6 +26,7 @@ const thumbnailNoImageModalities = [
   'OT',
   'PMAP',
 ];
+
 /**
  *
  * @param {*} param0
@@ -66,11 +69,27 @@ export default function PanelStudyBrowserTracking({
     ...StudyInstanceUIDs,
   ]);
   const [studyDisplayList, setStudyDisplayList] = useState([]);
-  const [hasLoadedViewports, setHasLoadedViewports] = useState(false);
   const [displaySets, setDisplaySets] = useState([]);
   const [displaySetsLoadingState, setDisplaySetsLoadingState] = useState({});
-  const [thumbnailImageSrcMap, setThumbnailImageSrcMap] = useState({});
-  const [jumpToDisplaySet, setJumpToDisplaySet] = useState(null);
+  // const [hasLoadedViewports, setHasLoadedViewports] = useState(false);
+  // const [thumbnailImageSrcMap, setThumbnailImageSrcMap] = useState({});
+  // const [jumpToDisplaySet, setJumpToDisplaySet] = useState(null);
+
+  const {
+    thumbnailImageSrcMap,
+    hasLoadedViewports,
+    jumpToDisplaySet,
+    setJumpToDisplaySet,
+    loadingState,
+    reloadThumbnail,
+  } = useThumbnailLoader({
+    displaySetService,
+    dataSource,
+    getImageSrc,
+    activeViewportId,
+    thumbnailNoImageModalities,
+    getImageIdForThumbnail,
+  });
 
   const [viewPresets, setViewPresets] = useState(
     customizationService.getCustomization('studyBrowser.viewPresets')?.value || defaultViewPresets
@@ -178,48 +197,67 @@ export default function PanelStudyBrowserTracking({
   }, [StudyInstanceUIDs, getStudiesForPatientByMRN]);
 
   // ~~ Initial Thumbnails
-  useEffect(() => {
-    if (!hasLoadedViewports) {
-      if (activeViewportId) {
-        // Once there is an active viewport id, it means the layout is ready
-        // so wait a bit of time to allow the viewports preferential loading
-        // which improves user experience of responsiveness significantly on slower
-        // systems.
-        window.setTimeout(() => setHasLoadedViewports(true), 250);
-      }
+  // useEffect(() => {
+  //   if (!hasLoadedViewports) {
+  //     if (activeViewportId) {
+  //       // Once there is an active viewport id, it means the layout is ready
+  //       // so wait a bit of time to allow the viewports preferential loading
+  //       // which improves user experience of responsiveness significantly on slower
+  //       // systems.
+  //       window.setTimeout(() => setHasLoadedViewports(true), 250);
+  //     }
 
-      return;
-    }
+  //     return;
+  //   }
 
-    let currentDisplaySets = displaySetService.activeDisplaySets;
-    // filter non based on the list of modalities that are supported by cornerstone
-    currentDisplaySets = currentDisplaySets.filter(
-      ds => !thumbnailNoImageModalities.includes(ds.Modality)
-    );
+  //   let currentDisplaySets = displaySetService.activeDisplaySets;
+  //   // filter non based on the list of modalities that are supported by cornerstone
+  //   currentDisplaySets = currentDisplaySets.filter(
+  //     ds => !thumbnailNoImageModalities.includes(ds.Modality)
+  //   );
 
-    if (!currentDisplaySets.length) {
-      return;
-    }
+  //   if (!currentDisplaySets.length) {
+  //     return;
+  //   }
 
-    currentDisplaySets.forEach(async dSet => {
-      const newImageSrcEntry = {};
-      const displaySet = displaySetService.getDisplaySetByUID(dSet.displaySetInstanceUID);
-      const imageIds = dataSource.getImageIdsForDisplaySet(displaySet);
+  //   // Ismail: setting the image src here
+  //   currentDisplaySets.forEach(async dSet => {
+  //     const newImageSrcEntry = {};
+  //     const displaySet = displaySetService.getDisplaySetByUID(dSet.displaySetInstanceUID);
 
-      const imageId = getImageIdForThumbnail(displaySet, imageIds);
+  //     if (displaySet?.unsupported) {
+  //       return;
+  //     }
 
-      // TODO: Is it okay that imageIds are not returned here for SR displaySets?
-      if (!imageId || displaySet?.unsupported) {
-        return;
-      }
-      // When the image arrives, render it and store the result in the thumbnailImgSrcMap
-      newImageSrcEntry[dSet.displaySetInstanceUID] = await getImageSrc(imageId);
+  //     // Gets the thumbnail base64 string from the DICOM-WEB APIs
+  //     var base64String = await dataSource.query.series.thumbnail(
+  //       dSet.StudyInstanceUID,
+  //       dSet.SeriesInstanceUID
+  //     );
 
-      setThumbnailImageSrcMap(prevState => {
-        return { ...prevState, ...newImageSrcEntry };
-      });
-    });
-  }, [displaySetService, dataSource, getImageSrc, activeViewportId, hasLoadedViewports]);
+  //     if (base64String != null) {
+  //       newImageSrcEntry[dSet.displaySetInstanceUID] = `data:image/png;base64,${base64String}`;
+  //     } else {
+  //       // Load the middle image of the series by loading all the imageIds and selecting the middle one
+  //       const imageIds = dataSource.getImageIdsForDisplaySet(displaySet);
+  //       const imageId = getImageIdForThumbnail(displaySet, imageIds);
+
+  //       if (!imageId) {
+  //         return;
+  //       }
+  //       newImageSrcEntry[dSet.displaySetInstanceUID] = await getImageSrc(imageId);
+  //     }
+
+  //     // TODO: Is it okay that imageIds are not returned here for SR displaySets?
+
+  //     // When the image arrives, render it and store the result in the thumbnailImgSrcMap
+  //     newImageSrcEntry[dSet.displaySetInstanceUID] = `data:image/png;base64,${base64String}`;
+
+  //     setThumbnailImageSrcMap(prevState => {
+  //       return { ...prevState, ...newImageSrcEntry };
+  //     });
+  //   });
+  // }, [displaySetService, dataSource, getImageSrc, activeViewportId, hasLoadedViewports]);
 
   // ~~ displaySets
   useEffect(() => {
@@ -271,50 +309,65 @@ export default function PanelStudyBrowserTracking({
   }, [studyPrefetcherService]);
 
   // ~~ subscriptions --> displaySets
-  useEffect(() => {
-    // DISPLAY_SETS_ADDED returns an array of DisplaySets that were added
-    const SubscriptionDisplaySetsAdded = displaySetService.subscribe(
-      displaySetService.EVENTS.DISPLAY_SETS_ADDED,
-      data => {
-        if (!hasLoadedViewports) {
-          return;
-        }
-        const { displaySetsAdded, options } = data;
-        displaySetsAdded.forEach(async dSet => {
-          const displaySetInstanceUID = dSet.displaySetInstanceUID;
+  // useEffect(() => {
+  //   // DISPLAY_SETS_ADDED returns an array of DisplaySets that were added
+  //   const SubscriptionDisplaySetsAdded = displaySetService.subscribe(
+  //     displaySetService.EVENTS.DISPLAY_SETS_ADDED,
+  //     data => {
+  //       if (!hasLoadedViewports) {
+  //         return;
+  //       }
+  //       const { displaySetsAdded, options } = data;
+  //       displaySetsAdded.forEach(async dSet => {
+  //         const displaySetInstanceUID = dSet.displaySetInstanceUID;
 
-          const newImageSrcEntry = {};
-          const displaySet = displaySetService.getDisplaySetByUID(displaySetInstanceUID);
-          if (displaySet?.unsupported) {
-            return;
-          }
+  //         const newImageSrcEntry = {};
+  //         const displaySet = displaySetService.getDisplaySetByUID(displaySetInstanceUID);
+  //         if (displaySet?.unsupported) {
+  //           return;
+  //         }
 
-          if (options.madeInClient) {
-            setJumpToDisplaySet(displaySetInstanceUID);
-          }
+  //         if (options.madeInClient) {
+  //           setJumpToDisplaySet(displaySetInstanceUID);
+  //         }
 
-          const imageIds = dataSource.getImageIdsForDisplaySet(displaySet);
-          const imageId = getImageIdForThumbnail(displaySet, imageIds);
+  //         // Gets the thumbnail base64 string from the DICOM-WEB APIs
+  //         var base64String = await dataSource.query.series.thumbnail(
+  //           dSet.StudyInstanceUID,
+  //           dSet.SeriesInstanceUID
+  //         );
 
-          // TODO: Is it okay that imageIds are not returned here for SR displaysets?
-          if (!imageId) {
-            return;
-          }
+  //         if (base64String != null) {
+  //           newImageSrcEntry[dSet.displaySetInstanceUID] = `data:image/png;base64,${base64String}`;
+  //         } else {
+  //           // Load the middle image of the series by loading all the imageIds and selecting the middle one
+  //           const imageIds = dataSource.getImageIdsForDisplaySet(displaySet);
+  //           const imageId = getImageIdForThumbnail(displaySet, imageIds);
 
-          // When the image arrives, render it and store the result in the thumbnailImgSrcMap
-          newImageSrcEntry[displaySetInstanceUID] = await getImageSrc(imageId);
-          setThumbnailImageSrcMap(prevState => {
-            return { ...prevState, ...newImageSrcEntry };
-          });
-        });
-      }
-    );
+  //           if (!imageId) {
+  //             return;
+  //           }
+  //           newImageSrcEntry[dSet.displaySetInstanceUID] = await getImageSrc(imageId);
+  //         }
 
-    return () => {
-      SubscriptionDisplaySetsAdded.unsubscribe();
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [displaySetService, dataSource, getImageSrc, thumbnailImageSrcMap, trackedSeries, viewports]);
+  //         // TODO: Is it okay that imageIds are not returned here for SR displaysets?
+  //         // if (!imageId) {
+  //         //   return;
+  //         // }
+
+  //         // When the image arrives, render it and store the result in the thumbnailImgSrcMap
+  //         setThumbnailImageSrcMap(prevState => {
+  //           return { ...prevState, ...newImageSrcEntry };
+  //         });
+  //       });
+  //     }
+  //   );
+
+  //   return () => {
+  //     SubscriptionDisplaySetsAdded.unsubscribe();
+  //   };
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [displaySetService, dataSource, getImageSrc, thumbnailImageSrcMap, trackedSeries, viewports]);
 
   useEffect(() => {
     // TODO: Will this always hold _all_ the displaySets we care about?
@@ -497,6 +550,8 @@ export default function PanelStudyBrowserTracking({
           updateViewPresetValue={updateViewPresetValue}
           actionIcons={actionIcons}
           updateActionIconValue={updateActionIconValue}
+          displaySetService={displaySetService}
+          hangingProtocolService={hangingProtocolService}
         />
         <Separator
           orientation="horizontal"
@@ -662,25 +717,64 @@ function _mapDisplaySets(
                 onSubmit: async ({ action }) => {
                   switch (action.id) {
                     case 'yes':
+                      console.log('Yes button clicked, starting deletion process');
+                      
                       try {
-                        await dataSource.reject.series(ds.StudyInstanceUID, ds.SeriesInstanceUID);
-                        displaySetService.deleteDisplaySet(displaySetInstanceUID);
+                        console.log('Calling API to delete series');
+                        
+                        // Check if rejectionCode is needed - add it if your API requires it
+                        // If your dataSource.reject.series method already adds the rejection code internally, that's fine
+                        const rejectionCode = '113001^DCM'; // Add rejection code if needed
+                        
+                        // Call the API with proper await handling
+                        await dataSource.reject.series(
+                          ds.StudyInstanceUID, 
+                          ds.SeriesInstanceUID,
+                          rejectionCode // Include this if your API needs it
+                        );
+                        
+                        console.log('API call successful, about to delete display set');
+                        
+                        // Try/catch this separately in case it's causing the issue
+                        try {
+                          displaySetService.deleteDisplaySet(displaySetInstanceUID);
+                          console.log("Display set deleted successfully");
+                        } catch (displaySetError) {
+                          console.error('Error deleting display set:', displaySetError);
+                          // Continue even if this fails - don't let it block dialog dismissal
+                        }
+                        
+                        console.log('About to dismiss dialog');
+                        // Dismiss the dialog regardless of display set deletion
                         uiDialogService.dismiss({ id: 'ds-reject-sr' });
+                        
+                        console.log('About to show success notification');
+                        // Show success notification
                         uiNotificationService.show({
                           title: 'Delete Report',
                           message: 'Report deleted successfully',
                           type: 'success',
                         });
+                        
+                        console.log('Delete process completed successfully');
                       } catch (error) {
+                        console.error('Error during deletion process:', error);
+                        
+                        // Always dismiss the dialog even on error
+                        console.log('Dismissing dialog after error');
                         uiDialogService.dismiss({ id: 'ds-reject-sr' });
+                        
+                        console.log('Showing error notification');
                         uiNotificationService.show({
                           title: 'Delete Report',
-                          message: 'Failed to delete report',
+                          message: `Failed to delete report: ${error.message || 'Unknown error'}`,
                           type: 'error',
                         });
                       }
                       break;
+                      
                     case 'cancel':
+                      console.log('Cancel button clicked, dismissing dialog');
                       uiDialogService.dismiss({ id: 'ds-reject-sr' });
                       break;
                   }

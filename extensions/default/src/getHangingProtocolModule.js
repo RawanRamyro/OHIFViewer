@@ -2,6 +2,7 @@ import hpMNGrid from './hangingprotocols/hpMNGrid';
 import hpMNCompare from './hangingprotocols/hpCompare';
 import hpMammography from './hangingprotocols/hpMammo';
 import hpScale from './hangingprotocols/hpScale';
+import { hangingProtocols } from '@ramyro/addons';
 
 const defaultProtocol = {
   id: 'default',
@@ -122,30 +123,26 @@ const defaultProtocol = {
 };
 
 function getHangingProtocolModule() {
-  return [
+  const protocolsList = [
     {
       name: defaultProtocol.id,
       protocol: defaultProtocol,
     },
-    // Create a MxN comparison hanging protocol available by default
-    {
-      name: hpMNCompare.id,
-      protocol: hpMNCompare,
-    },
-    {
-      name: hpMammography.id,
-      protocol: hpMammography,
-    },
-    {
-      name: hpScale.id,
-      protocol: hpScale,
-    },
-    // Create a MxN hanging protocol available by default
-    {
-      name: hpMNGrid.id,
-      protocol: hpMNGrid,
-    },
   ];
+
+  // Add dynamic protocols if successfully fetched
+  for (const hangingProtocol of hangingProtocols) {
+    const stringId = String(hangingProtocol.id);
+    protocolsList.push({
+      name: stringId,
+      protocol: {
+        ...hangingProtocol,
+        id: stringId,
+      },
+    });
+  }
+
+  return protocolsList;
 }
 
 export default getHangingProtocolModule;

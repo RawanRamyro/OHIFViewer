@@ -24,6 +24,7 @@ import {
 } from '@ohif/core';
 
 import loadModules, { loadModule as peerImport } from './pluginImports';
+import { setupCookieAuthentication } from '@ramyro/addons';
 
 /**
  * @param {object|func} appConfigOrFunc - application configuration, or a function that returns application configuration
@@ -131,6 +132,8 @@ async function appInit(appConfigOrFunc, defaultExtensions, defaultModes) {
   // Hack alert - don't touch the original modes definition,
   // but there are still dependencies on having the appConfig modes defined
   appConfig.modes = appConfig.loadedModes;
+
+  setupCookieAuthentication(servicesManager);
 
   return {
     appConfig,

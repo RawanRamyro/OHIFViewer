@@ -43,73 +43,93 @@ module.exports = {
     },
     extend: {
       colors: {
-        highlight: 'hsl(var(--highlight))',
-        border: 'hsl(var(--border))',
-        input: 'hsl(var(--input))',
-        ring: 'hsl(var(--ring))',
-        background: 'hsl(var(--background))',
-        foreground: 'hsl(var(--foreground))',
+        highlight: '#00ADB5',
+        border: '#E2E8F0',
+        input: '#E2E8F0',
+        ring: '#8B5CF6',
+        background: '#222831',
+        foreground: '#EEEEEE',
         primary: {
-          DEFAULT: 'hsl(var(--primary))',
-          foreground: 'hsl(var(--primary-foreground))',
+          DEFAULT: '#EEEEEE',
+          foreground: '#F8FAFC',
         },
         secondary: {
-          DEFAULT: 'hsl(var(--secondary))',
-          foreground: 'hsl(var(--secondary-foreground))',
+          DEFAULT: '#F3F4F6',
+          foreground: '#EEEEEE',
         },
         destructive: {
-          DEFAULT: 'hsl(var(--destructive))',
-          foreground: 'hsl(var(--destructive-foreground))',
+          DEFAULT: '#EF4444',
+          foreground: '#F8FAFC',
         },
         muted: {
-          DEFAULT: 'hsl(var(--muted))',
-          foreground: 'hsl(var(--muted-foreground))',
+          DEFAULT: '#0E0E0E',
+          foreground: '#6B7280',
         },
         accent: {
-          DEFAULT: 'hsl(var(--accent))',
-          foreground: 'hsl(var(--accent-foreground))',
+          DEFAULT: '#8297AC',
+          foreground: '#1F2937',
         },
         popover: {
-          DEFAULT: 'hsl(var(--popover))',
-          foreground: 'hsl(var(--popover-foreground))',
+          DEFAULT: '#222831',
+          foreground: '#FFFFFF',
         },
         card: {
-          DEFAULT: 'hsl(var(--card))',
-          foreground: 'hsl(var(--card-foreground))',
+          DEFAULT: '#FFFFFF',
+          foreground: '#1A1E2C',
         },
       },
-      borderRadius: {
-        lg: 'var(--radius)',
-        md: 'calc(var(--radius) - 2px)',
-        sm: 'calc(var(--radius) - 4px)',
-      },
-      keyframes: {
-        'accordion-down': {
-          from: { height: '0' },
-          to: { height: 'var(--radix-accordion-content-height)' },
+
+      // Dark mode colors
+      dark: {
+        highlight: '#5ACCE6',
+        border: '#2D3748',
+        input: '#2D3748',
+        ring: '#7C3AED',
+        background: '#1A1E2C',
+        foreground: '#F8FAFC',
+        primary: {
+          DEFAULT: '#7C3AED',
+          foreground: '#F8FAFC',
         },
-        'accordion-up': {
-          from: { height: 'var(--radix-accordion-content-height)' },
-          to: { height: '0' },
+        secondary: {
+          DEFAULT: '#2D3748',
+          foreground: '#F8FAFC',
+        },
+        destructive: {
+          DEFAULT: '#EF4444',
+          foreground: '#F8FAFC',
+        },
+        muted: {
+          DEFAULT: '#3B82F6',
+          foreground: '#94A3B8',
+        },
+        accent: {
+          DEFAULT: '#2D3748',
+          foreground: '#F8FAFC',
+        },
+        popover: {
+          DEFAULT: '#1A1E2C',
+          foreground: '#F8FAFC',
+        },
+        card: {
+          DEFAULT: '#1A1E2C',
+          foreground: '#F8FAFC',
         },
       },
-      animation: {
-        'accordion-down': 'accordion-down 0.2s ease-out',
-        'accordion-up': 'accordion-up 0.2s ease-out',
-      },
+
       bkg: {
-        low: '#050615',
-        med: '#090C29',
-        full: '#041C4A',
+        low: '#121212',
+        med: '#1E1E1E',
+        full: '#2D2D2D',
       },
       info: {
         primary: '#FFFFFF',
-        secondary: '#7BB2CE',
+        secondary: '#A0D8EF',
       },
       actions: {
-        primary: '#348CFD',
-        highlight: '#5ACCE6',
-        hover: 'rgba(52, 140, 253, 0.2)',
+        primary: '#4299E1',
+        highlight: '#63B3ED',
+        hover: 'rgba(66, 153, 225, 0.25)',
       },
     },
   },

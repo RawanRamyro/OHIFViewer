@@ -28,6 +28,7 @@ export const SegmentationHeader: React.FC<{
     onSegmentationDownload,
     onSegmentationDownloadRTSS,
     storeSegmentation,
+    onSegmentationSave,
   } = useSegmentationTableContext('SegmentationHeader');
 
   if (!segmentation) {
