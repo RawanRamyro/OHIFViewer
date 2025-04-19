@@ -1,224 +1,139 @@
-// TODO: torn, can either bake this here; or have to create a whole new button type
-// Only ways that you can pass in a custom React component for render :l
-import { ToolbarService } from '@ohif/core';
 import type { Button } from '@ohif/core/types';
 
-const { createButton } = ToolbarService;
-
 export const setToolActiveToolbar = {
-  commandName: 'setToolActiveToolbar',
+  commandName: 'setToolActive',
   commandOptions: {
-    toolGroupIds: ['default', 'mpr', 'SRToolGroup', 'volume3d'],
+    toolName: 'line',
   },
+  context: 'MICROSCOPY',
 };
 
 const toolbarButtons: Button[] = [
   {
     id: 'MeasurementTools',
-    uiType: 'ohif.splitButton',
+    uiType: 'ohif.toolButtonList',
     props: {
+      buttonSection: 'measurementSection',
       groupId: 'MeasurementTools',
-      // group evaluate to determine which item should move to the top
-      evaluate: 'evaluate.group.promoteToPrimaryIfCornerstoneToolNotActiveInTheList',
-      primary: createButton({
-        id: 'Length',
-        icon: 'tool-length',
-        label: 'Length',
-        tooltip: 'Length Tool',
-        commands: setToolActiveToolbar,
-        evaluate: 'evaluate.cornerstoneTool',
-      }),
-      secondary: {
-        icon: 'chevron-down',
-        tooltip: 'More Measure Tools',
+    },
+  },
+  {
+    id: 'line',
+    uiType: 'ohif.toolButton',
+    props: {
+      icon: 'tool-length',
+      label: 'Line',
+      tooltip: 'Line',
+      commands: setToolActiveToolbar,
+      evaluate: 'evaluate.microscopyTool',
+    },
+  },
+  {
+    id: 'point',
+    uiType: 'ohif.toolButton',
+    props: {
+      icon: 'tool-point',
+      label: 'Point',
+      tooltip: 'Point Tool',
+      commands: {
+        ...setToolActiveToolbar,
+        commandOptions: { toolName: 'point' },
       },
-      items: [
-        createButton({
-          id: 'Length',
-          icon: 'tool-length',
-          label: 'Length',
-          tooltip: 'Length Tool',
-          commands: setToolActiveToolbar,
-          evaluate: 'evaluate.cornerstoneTool',
-        }),
-        createButton({
-          id: 'Bidirectional',
-          icon: 'tool-bidirectional',
-          label: 'Bidirectional',
-          tooltip: 'Bidirectional Tool',
-          commands: setToolActiveToolbar,
-          evaluate: 'evaluate.cornerstoneTool',
-        }),
-        createButton({
-          id: 'ArrowAnnotate',
-          icon: 'tool-annotate',
-          label: 'Annotation',
-          tooltip: 'Arrow Annotate',
-          commands: setToolActiveToolbar,
-          evaluate: 'evaluate.cornerstoneTool',
-        }),
-        createButton({
-          id: 'EllipticalROI',
-          icon: 'tool-ellipse',
-          label: 'Ellipse',
-          tooltip: 'Ellipse ROI',
-          commands: setToolActiveToolbar,
-          evaluate: 'evaluate.cornerstoneTool',
-        }),
-        createButton({
-          id: 'RectangleROI',
-          icon: 'tool-rectangle',
-          label: 'Rectangle',
-          tooltip: 'Rectangle ROI',
-          commands: setToolActiveToolbar,
-          evaluate: 'evaluate.cornerstoneTool',
-        }),
-        createButton({
-          id: 'CircleROI',
-          icon: 'tool-circle',
-          label: 'Circle',
-          tooltip: 'Circle Tool',
-          commands: setToolActiveToolbar,
-          evaluate: 'evaluate.cornerstoneTool',
-        }),
-        createButton({
-          id: 'PlanarFreehandROI',
-          icon: 'icon-tool-freehand-roi',
-          label: 'Freehand ROI',
-          tooltip: 'Freehand ROI',
-          commands: setToolActiveToolbar,
-          evaluate: 'evaluate.cornerstoneTool',
-        }),
-        createButton({
-          id: 'SplineROI',
-          icon: 'icon-tool-spline-roi',
-          label: 'Spline ROI',
-          tooltip: 'Spline ROI',
-          commands: setToolActiveToolbar,
-          evaluate: 'evaluate.cornerstoneTool',
-        }),
-        createButton({
-          id: 'LivewireContour',
-          icon: 'icon-tool-livewire',
-          label: 'Livewire tool',
-          tooltip: 'Livewire tool',
-          commands: setToolActiveToolbar,
-          evaluate: 'evaluate.cornerstoneTool',
-        }),
-      ],
+      evaluate: 'evaluate.microscopyTool',
     },
   },
   {
-    id: 'Zoom',
-    uiType: 'ohif.radioGroup',
+    id: 'polygon',
+    uiType: 'ohif.toolButton',
     props: {
-      icon: 'tool-zoom',
-      label: 'Zoom',
-      commands: setToolActiveToolbar,
-      evaluate: 'evaluate.cornerstoneTool',
+      icon: 'tool-polygon',
+      label: 'Polygon',
+      tooltip: 'Polygon Tool',
+      commands: {
+        ...setToolActiveToolbar,
+        commandOptions: { toolName: 'polygon' },
+      },
+      evaluate: 'evaluate.microscopyTool',
     },
   },
-  // Window Level
   {
-    id: 'WindowLevel',
-    uiType: 'ohif.radioGroup',
+    id: 'circle',
+    uiType: 'ohif.toolButton',
     props: {
-      icon: 'tool-window-level',
-      label: 'Window Level',
-      commands: setToolActiveToolbar,
-      evaluate: [
-        'evaluate.cornerstoneTool',
-        {
-          name: 'evaluate.viewport.supported',
-          unsupportedViewportTypes: ['wholeSlide'],
-        },
-      ],
+      icon: 'tool-circle',
+      label: 'Circle',
+      tooltip: 'Circle Tool',
+      commands: {
+        ...setToolActiveToolbar,
+        commandOptions: { toolName: 'circle' },
+      },
+      evaluate: 'evaluate.microscopyTool',
     },
   },
-  // Pan...
   {
-    id: 'Pan',
-    uiType: 'ohif.radioGroup',
+    id: 'box',
+    uiType: 'ohif.toolButton',
     props: {
-      type: 'tool',
+      icon: 'tool-rectangle',
+      label: 'Box',
+      tooltip: 'Box Tool',
+      commands: {
+        ...setToolActiveToolbar,
+        commandOptions: { toolName: 'box' },
+      },
+      evaluate: 'evaluate.microscopyTool',
+    },
+  },
+  {
+    id: 'freehandpolygon',
+    uiType: 'ohif.toolButton',
+    props: {
+      icon: 'tool-freehand-polygon',
+      label: 'Freehand Polygon',
+      tooltip: 'Freehand Polygon Tool',
+      commands: {
+        ...setToolActiveToolbar,
+        commandOptions: { toolName: 'freehandpolygon' },
+      },
+      evaluate: 'evaluate.microscopyTool',
+    },
+  },
+  {
+    id: 'freehandline',
+    uiType: 'ohif.toolButton',
+    props: {
+      icon: 'tool-freehand-line',
+      label: 'Freehand Line',
+      tooltip: 'Freehand Line Tool',
+      commands: {
+        ...setToolActiveToolbar,
+        commandOptions: { toolName: 'freehandline' },
+      },
+      evaluate: 'evaluate.microscopyTool',
+    },
+  },
+  {
+    id: 'dragPan',
+    uiType: 'ohif.toolButton',
+    props: {
       icon: 'tool-move',
       label: 'Pan',
-      commands: setToolActiveToolbar,
-      evaluate: 'evaluate.cornerstoneTool',
-    },
-  },
-  {
-    id: 'TrackballRotate',
-    uiType: 'ohif.radioGroup',
-    props: {
-      type: 'tool',
-      icon: 'tool-3d-rotate',
-      label: '3D Rotate',
-      commands: setToolActiveToolbar,
-      evaluate: {
-        name: 'evaluate.cornerstoneTool',
-        disabledText: 'Select a 3D viewport to enable this tool',
-      },
-    },
-  },
-  {
-    id: 'Capture',
-    uiType: 'ohif.radioGroup',
-    props: {
-      icon: 'tool-capture',
-      label: 'Capture',
-      commands: 'showDownloadViewportModal',
-      evaluate: [
-        'evaluate.action',
-        {
-          name: 'evaluate.viewport.supported',
-          unsupportedViewportTypes: ['video', 'wholeSlide'],
-        },
-      ],
-    },
-  },
-  {
-    id: 'KeyImage',
-    uiType: 'ohif.radioGroup',
-    props: {
-      icon: 'tool-key-image',
-      label: 'Key Image',
-      commands: 'showKeyImageForm',
-      evaluate: [
-        'evaluate.action',
-        {
-          name: 'evaluate.viewport.supported',
-          unsupportedViewportTypes: ['video', 'wholeSlide'],
-        },
-      ],
-    },
-  },
-  {
-    id: 'Layout',
-    uiType: 'ohif.layoutSelector',
-    props: {
-      rows: 3,
-      columns: 4,
-      evaluate: 'evaluate.action',
-    },
-  },
-  {
-    id: 'Crosshairs',
-    uiType: 'ohif.radioGroup',
-    props: {
-      type: 'tool',
-      icon: 'tool-crosshair',
-      label: 'Crosshairs',
       commands: {
-        commandName: 'setToolActiveToolbar',
-        commandOptions: {
-          toolGroupIds: ['mpr'],
-        },
+        ...setToolActiveToolbar,
+        commandOptions: { toolName: 'dragPan' },
       },
-      evaluate: {
-        name: 'evaluate.cornerstoneTool',
-        disabledText: 'Select an MPR viewport to enable this tool',
-      },
+      evaluate: 'evaluate.microscopyTool',
+    },
+  },
+  {
+    id: 'TagBrowser',
+    uiType: 'ohif.toolButton',
+    props: {
+      icon: 'dicom-tag-browser',
+      label: 'Dicom Tag Browser',
+      tooltip: 'Dicom Tag Browser',
+      commands: 'openDICOMTagViewer',
+      evaluate: 'evaluate.action',
     },
   },
 ];

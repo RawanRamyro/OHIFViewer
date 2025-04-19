@@ -44,6 +44,7 @@ module.exports = {
     extend: {
       colors: {
         highlight: '#00ADB5',
+        neutral: '#7F94AD',
         border: '#E2E8F0',
         input: '#E2E8F0',
         ring: '#8B5CF6',

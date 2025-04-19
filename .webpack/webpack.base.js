@@ -60,6 +60,7 @@ const defineValues = {
 
   'process.env.DATA_SOURCE': JSON.stringify(process.env.DATA_SOURCE || ''),
   'process.env.USE_EXTERNAL_WORKLIST': JSON.stringify(process.env.USE_EXTERNAL_WORKLIST || ''),
+  'process.env.TEST_ENV': JSON.stringify(process.env.TEST_ENV || ''),
 };
 
 // Only redefine updated values.  This avoids warning messages in the logs
@@ -68,10 +69,6 @@ if (!process.env.APP_CONFIG) {
 }
 
 module.exports = (env, argv, { SRC_DIR, ENTRY }) => {
-  if (!process.env.NODE_ENV) {
-    throw new Error('process.env.NODE_ENV not set');
-  }
-
   const mode = NODE_ENV === 'production' ? 'production' : 'development';
   const isProdBuild = NODE_ENV === 'production';
   const isQuickBuild = QUICK_BUILD === 'true';
@@ -182,6 +179,10 @@ module.exports = (env, argv, { SRC_DIR, ENTRY }) => {
               },
             },
           ],
+        },
+        {
+          test: /\.(woff|woff2|eot|ttf|otf)$/i,
+          type: 'asset/resource',
         },
       ], //.concat(vtkRules),
     },

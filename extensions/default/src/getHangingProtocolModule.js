@@ -1,4 +1,4 @@
-import hpMNGrid from './hangingprotocols/hpMNGrid';
+import { hpMN, hpMN8 } from './hangingprotocols/hpMNGrid';
 import hpMNCompare from './hangingprotocols/hpCompare';
 import hpMammography from './hangingprotocols/hpMammo';
 import hpScale from './hangingprotocols/hpScale';

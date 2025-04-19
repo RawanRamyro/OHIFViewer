@@ -20,6 +20,7 @@ import {
   PanelService,
   WorkflowStepsService,
   StudyPrefetcherService,
+  MultiMonitorService,
   // utils,
 } from '@ohif/core';
 
@@ -47,6 +48,7 @@ async function appInit(appConfigOrFunc, defaultExtensions, defaultModes) {
   };
   // Default the peer import function
   appConfig.peerImport ||= peerImport;
+  appConfig.measurementTrackingMode ||= 'standard';
 
   const extensionManager = new ExtensionManager({
     commandsManager,
@@ -59,6 +61,7 @@ async function appInit(appConfigOrFunc, defaultExtensions, defaultModes) {
   servicesManager.setExtensionManager(extensionManager);
 
   servicesManager.registerServices([
+    [MultiMonitorService.REGISTRATION, appConfig.multimonitor],
     UINotificationService.REGISTRATION,
     UIModalService.REGISTRATION,
     UIDialogService.REGISTRATION,

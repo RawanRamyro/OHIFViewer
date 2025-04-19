@@ -106,6 +106,10 @@ module.exports = (env, argv) => {
               ignore: ['**/config/**', '**/html-templates/**', '.DS_Store'],
             },
           },
+          {
+            from: '../../../node_modules/onnxruntime-web/dist',
+            to: `${DIST_DIR}/ort`,
+          },
           // Short term solution to make sure GCloud config is available in output
           // for our docker implementation
           {
@@ -149,8 +153,6 @@ module.exports = (env, argv) => {
       new InjectManifest({
         swDest: 'sw.js',
         swSrc: path.join(SRC_DIR, 'service-worker.js'),
-        // Increase the limit to 4mb:
-        maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
         // Need to exclude the theme as it is updated independently
         exclude: [/theme/],
         // Cache large files for the manifests to avoid warning messages
@@ -171,6 +173,12 @@ module.exports = (env, argv) => {
       },
       proxy: {
         '/dicomweb': 'http://localhost:5000',
+        '/dicom-microscopy-viewer': {
+          target: 'http://localhost:3000',
+          pathRewrite: {
+            '^/dicom-microscopy-viewer': `/${PUBLIC_URL}/dicom-microscopy-viewer`,
+          },
+        },
       },
       static: [
         {
@@ -189,10 +197,6 @@ module.exports = (env, argv) => {
       historyApiFallback: {
         disableDotRule: true,
         index: PUBLIC_URL + 'index.html',
-      },
-      headers: {
-        'Cross-Origin-Embedder-Policy': 'require-corp',
-        'Cross-Origin-Opener-Policy': 'same-origin',
       },
       devMiddleware: {
         writeToDisk: true,

@@ -12,22 +12,20 @@ import {
   CommandsManager,
   HotkeysManager,
   ServiceProvidersManager,
+  SystemContextProvider,
 } from '@ohif/core';
-import {
-  DialogProvider,
-  Modal,
-  ModalProvider,
-  ThemeWrapper,
-  ViewportDialogProvider,
-  ViewportGridProvider,
-  CineProvider,
-  UserAuthenticationProvider,
-  ToolboxProvider,
-} from '@ohif/ui';
 import {
   ThemeWrapper as ThemeWrapperNext,
   NotificationProvider,
+  ViewportGridProvider,
+  DialogProvider,
+  CineProvider,
   TooltipProvider,
+  Modal as ModalNext,
+  ManagedDialog,
+  ModalProvider,
+  ViewportDialogProvider,
+  UserAuthenticationProvider,
 } from '@ohif/ui-next';
 // Viewer Project
 // TODO: Should this influence study list?
@@ -53,7 +51,7 @@ function App({
      * Hosted at: https://ohif.org/where-i-host-the/viewer/
      * Value: `/where-i-host-the/viewer/`
      * */
-    routerBaseName: '/',
+    routerBasename: '/',
     /**
      *
      */
@@ -114,15 +112,14 @@ function App({
     [UserAuthenticationProvider, { service: userAuthenticationService }],
     [I18nextProvider, { i18n }],
     [ThemeWrapperNext],
-    [ThemeWrapper],
-    [ToolboxProvider],
+    [SystemContextProvider, { commandsManager, extensionManager, hotkeysManager, servicesManager }],
     [ViewportGridProvider, { service: viewportGridService }],
     [ViewportDialogProvider, { service: uiViewportDialogService }],
     [CineProvider, { service: cineService }],
     [NotificationProvider, { service: uiNotificationService }],
     [TooltipProvider],
-    [DialogProvider, { service: uiDialogService }],
-    [ModalProvider, { service: uiModalService, modal: Modal }],
+    [DialogProvider, { service: uiDialogService, dialog: ManagedDialog }],
+    [ModalProvider, { service: uiModalService, modal: ModalNext }],
     [ShepherdJourneyProvider],
   ];
 

@@ -1,6 +1,4 @@
-import { ServicesManager} from "@ohif/core";
-
-export default function (wadoRoot, servicesManager) {
+export default function (wadoRoot, getAuthrorizationHeader) {
   return {
     series: (StudyInstanceUID, SeriesInstanceUID) => {
       return new Promise((resolve, reject) => {
@@ -12,27 +10,20 @@ export default function (wadoRoot, servicesManager) {
         const xhr = new XMLHttpRequest();
         xhr.open('POST', url, true);
 
-        // Get auth headers from userAuthenticationService
-        const authHeaders = servicesManager.services.userAuthenticationService.getAuthorizationHeader();
-        
-        // Add Authorization header if available
-        if (authHeaders && authHeaders.Authorization) {
-          xhr.setRequestHeader('Authorization', authHeaders.Authorization);
-          console.log('Added Authorization header:', authHeaders.Authorization);
-        } else {
-          console.log('No Authorization header available');
+        const headers = getAuthrorizationHeader();
+
+        for (const key in headers) {
+          xhr.setRequestHeader(key, headers[key]);
         }
-        
-        // Set content type header
-        xhr.setRequestHeader('Content-Type', 'application/json');
-        
-        console.log('Sending request to:', url);
+
+        //Send the proper header information along with the request
+        // TODO -> Auth when we re-add authorization.
+
+        console.log(xhr);
 
         xhr.onreadystatechange = function () {
           // Call a function when the state changes
           if (xhr.readyState == 4) {
-            console.log('Response status:', xhr.status);
-            
             switch (xhr.status) {
               case 204:
                 console.log('Series rejection successful');
@@ -57,13 +48,6 @@ export default function (wadoRoot, servicesManager) {
             }
           }
         };
-        
-        // Add error handling for network issues
-        xhr.onerror = function() {
-          console.error('Network error occurred during series rejection');
-          reject('Network error occurred. Please check your connection.');
-        };
-        
         xhr.send();
       });
     },

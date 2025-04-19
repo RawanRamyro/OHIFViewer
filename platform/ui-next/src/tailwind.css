@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+@import './assets/fonts.css';
 
 @tailwind base;
 @tailwind components;
@@ -10,6 +10,7 @@
   :root {
     --background: #FFFFFF;
     --foreground: #1A1E2C;
+    --neutral: 7F94AD;
     --card: #FFFFFF;
     --card-foreground: #1A1E2C;
     --popover: #FFFFFF;
